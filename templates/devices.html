@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="mb-4">Devices</h1>
+
+<div class="card">
+    <div class="card-header">Network Devices (ping scan)</div>
+    <div class="card-body">
+        {% if devices %}
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>IP</th>
+                <th>Status</th>
+                <th>Latency (ms)</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for d in devices %}
+            <tr>
+                <td>{{ d.name }}</td>
+                <td><code>{{ d.ip }}</code></td>
+                <td>
+                    {% if d.reachable %}
+                    <span class="badge bg-success">Online</span>
+                    {% else %}
+                    <span class="badge bg-danger">Offline</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if d.latency is not none %}
+                    {{ "%.1f"|format(d.latency) }}
+                    {% else %}
+                    -
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No devices responded to ping in the configured range.</p>
+        {% endif %}
+        <p class="text-muted">
+            Scanning {{ network_prefix }}{{ host_range.start }}
+            – {{ network_prefix }}{{ host_range.stop - 1 }}.
+            Set <code>NETWORK_PREFIX</code> and <code>HOST_RANGE</code> in
+            <code>dashboard_app.py</code>.
+        </p>
+    </div>
+</div>
+{% endblock %}

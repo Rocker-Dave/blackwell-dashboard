@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="mb-4">Home Dashboard</h1>
+
+<div class="row">
+    <!-- Local laptop status -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">Laptop Status (OpenBSD)</div>
+            <div class="card-body">
+                <p><strong>Hostname:</strong> {{ local.hostname }}</p>
+                <p><strong>Internet:</strong>
+                    {% if local.internet_ok %}
+                    <span class="badge bg-success">Online</span>
+                    {% else %}
+                    <span class="badge bg-danger">Offline</span>
+                    {% endif %}
+                </p>
+                <p><strong>Uptime:</strong> <code>{{ local.uptime }}</code></p>
+                <p><strong>Disk (/):</strong> <code>{{ local.disk_root }}</code></p>
+                <p><strong>uname:</strong></p>
+                <pre>{{ local.uname }}</pre>
+            </div>
+        </div>
+    </div>
+
+    <!-- Server status -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">Server Status</div>
+            <div class="card-body">
+                <p><strong>Server base URL:</strong> <code>{{ server_url }}</code></p>
+                <p><strong>Reachable:</strong>
+                    {% if server.reachable %}
+                    <span class="badge bg-success">Yes</span>
+                    {% else %}
+                    <span class="badge bg-danger">No</span>
+                    {% endif %}
+                </p>
+
+                {% if server.status %}
+                <p><strong>Hostname:</strong> {{ server.status.hostname }}</p>
+                <p><strong>Uptime:</strong> <code>{{ server.status.uptime }}</code></p>
+                <p><strong>Disk (/):</strong> <code>{{ server.status.disk_root }}</code></p>
+                <p><strong>uname:</strong></p>
+                <pre>{{ server.status.uname }}</pre>
+                {% else %}
+                <p>No detailed status (server might be down or API unreachable).</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Notes / Docs summary placeholder -->
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">Atlas Docs Summary</div>
+            <div class="card-body">
+                <p><strong>Total notes:</strong> {{ notes.count }}</p>
+                {% if notes.notes %}
+                <ul>
+                    {% for n in notes.notes %}
+                    <li><strong>{{ n.title }}</strong> (updated {{ n.updated }})</li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p>No notes yet.</p>
+                {% endif %}
+                <p class="text-muted">Later, this will become clickable docs with editing.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
